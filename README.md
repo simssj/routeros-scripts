@@ -201,6 +201,11 @@ Available Scripts
 [comment]: # (* learn-mac-based-vlan)
 [comment]: # (* manage-umts)
 
+Available plugins
+-----------------
+
+* [Manage VLANs on bridge ports](doc/global-functions.d/bridge-port-vlan.md)
+
 Contact
 -------
 
