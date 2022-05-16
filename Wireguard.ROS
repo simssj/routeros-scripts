@@ -1,0 +1,28 @@
+# https://www.reddit.com/r/mikrotik/comments/rii05x/routeros_71_wireguard_recommended_firewall_rules/
+/interface wireguard
+add listen-port=2511 mtu=1420 name=wireguard1
+/ip address
+add address=10.251.1.1/24 interface=wireguard1 network=10.251.1.0
+/interface wireguard peers
+add allowed-address=10.251.1.11/32 interface=wireguard1 public-key="Mhkod8iko8njl0NFuOFqsFhryH366uQa/iAI+cX7VWw="
+add allowed-address=10.251.1.12/32 interface=wireguard1 public-key="Mhkod8iko8njl0NFuOFqsFhryH366uQa/iAI+cX7VWw="
+add allowed-address=10.251.1.13/32 interface=wireguard1 public-key="Mhkod8iko8njl0NFuOFqsFhryH366uQa/iAI+cX7VWw="
+add allowed-address=10.251.1.14/32 interface=wireguard1 public-key="Mhkod8iko8njl0NFuOFqsFhryH366uQa/iAI+cX7VWw="
+add allowed-address=10.251.1.15/32 interface=wireguard1 public-key="Mhkod8iko8njl0NFuOFqsFhryH366uQa/iAI+cX7VWw="
+/ip firewall filter
+add action=accept chain=input comment="allow wireguard" dst-port=2511 protocol=udp
+
+
+
+[Interface]
+PrivateKey = aJXqRvz9dFdS6KN9dbLtqGe6oQqnp72P8lG+AFZZaFg=
+Address = 10.251.10.11/32
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+ListenPort = 2511
+
+[Peer]
+PublicKey = <contents-of-client-publickey>
+AllowedIPs = 10.251.10.11/32
+
+private-key="aJXqRvz9dFdS6KN9dbLtqGe6oQqnp72P8lG+AFZZaFg="
