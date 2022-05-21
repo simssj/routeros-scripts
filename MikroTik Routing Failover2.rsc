@@ -1,10 +1,5 @@
 # From: https://help.mikrotik.com/docs/pages/viewpage.action?pageId=26476608
 
-# Create pseudo-addresses virtually bound to interfaces:
-/ip/address
-add address=10.40.254.1 interface=ether1 network=10.40.254.1
-add address=10.40.253.1 interface=lte1 network=10.40.253.1
-
 # Before detailed example overview, in a setup where we have private IP addresses behind the public IP, we should configure source NAT:
 /ip/firewall/nat
 add chain=srcnat action=masquerade out-interface=ether1
@@ -23,8 +18,8 @@ add chain=output connection-mark=LTE_conn action=mark-routing new-routing-mark=t
 
 # We will split the routing configuration into three parts. First, we will configure Host1 and Host2 as destination addresses in the routing section:
 /ip/route/
-add dst-address=8.8.8.8 scope=10 gateway=10.40.254.1
-add dst-address=8.8.4.4 scope=10 gateway=10.40.253.1
+add dst-address=8.8.8.8 scope=10 gateway=192.168.8.1
+add dst-address=8.8.4.4 scope=10 gateway=192.168.1.1
 
 # Now configure routes that will be resolved recursively, so they will only be active when they are reachable with ping:
 /ip/route/
@@ -39,10 +34,10 @@ add distance=2 gateway=8.8.8.8 routing-table=to_LTE check-gateway=ping
 # Adding Multiple Hosts
 #  In the case where Host1 and Host2 fail, the corresponding link is considered failed too. In this section, we will use two additional hosts for redundancy. In our example, we will use OpenDNS servers Host1B (208.67.222.222) and Host2B (208.67.220.220):
 /ip/route
-add dst-address=8.8.8.8 gateway=10.40.254.1 scope=10
-add dst-address=208.67.222.222 gateway=10.40.254.1 scope=10
-add dst-address=8.8.4.4 gateway=10.40.253.1 scope=10
-add dst-address=208.67.220.220 gateway=10.40.253.1 scope=10
+add dst-address=8.8.8.8 gateway=192.168.8.1 scope=10
+add dst-address=208.67.222.222 gateway=192.168.8.1 scope=10
+add dst-address=8.8.4.4 gateway=192.168.1.1 scope=10
+add dst-address=208.67.220.220 gateway=192.168.1.1 scope=10
 
 # Then, let's create destinations to "virtual" hops to use in further routes. We will use 10.10.10.1 and 10.20.20.2 as an example, but you can use different ones, be sure they do not override other configured IP addresses in your setup:
 /ip/route
