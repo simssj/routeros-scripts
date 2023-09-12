@@ -3,17 +3,10 @@ Upload backup to Mikrotik cloud
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
 This script uploads [binary backup to Mikrotik cloud](https://wiki.mikrotik.com/wiki/Manual:IP/Cloud#Backup).
-
-### Sample notification
-
-![cloud-backup notification](cloud-backup.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -25,12 +18,11 @@ Just install the script:
 Configuration
 -------------
 
-The configuration goes to `global-config-overlay`, these are the parameters:
+The configuration goes to `global-config-overlay`, this is the only parameter:
 
 * `BackupPassword`: password to encrypt the backup with
-* `BackupRandomDelay`: delay up to amount of seconds when run from scheduler
 
-Also notification settings are required for e-mail, matrix and/or telegram.
+Also notification settings are required for e-mail and telegram.
 
 Usage and invocation
 --------------------

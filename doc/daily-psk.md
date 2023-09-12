@@ -3,18 +3,11 @@ Use wireless network with daily psk
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
 This script is supposed to provide a wifi network which changes the
 passphrase to a pseudo-random string daily.
-
-### Sample notification
-
-![daily-psk notification](daily-psk.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -51,7 +44,7 @@ Then add an access list entry:
 
     / interface wireless access-list add comment="Daily PSK" interface=wl-daily private-pre-shared-key="ToBeChangedDaily";
 
-Also notification settings are required for e-mail, matrix and/or telegram.
+Also notification settings are required for e-mail and telegram.
 
 ---
 [◀ Go back to main README](../README.md)  

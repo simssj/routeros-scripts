@@ -3,9 +3,6 @@ Create DNS records for DHCP leases
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
@@ -44,7 +41,6 @@ See also
 
 * [Collect MAC addresses in wireless access list](collect-wireless-mac.md)
 * [Comment DHCP leases with info from access list](dhcp-lease-comment.md)
-* [Create DNS records for IPSec peers](ipsec-to-dns.md)
 * [Run other scripts on DHCP lease](lease-script.md)
 
 ---

@@ -3,19 +3,12 @@ Forward received SMS
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
 RouterOS can receive SMS. This script forwards SMS as notification.
 
 A broadband interface with SMS support is required.
-
-### Sample notification
-
-![sms-forward notification](sms-forward.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -31,8 +24,8 @@ Just install the script:
 Configuration
 -------------
 
-Notification settings are required for e-mail, matrix and/or telegram. Also
-you have to enable receiving of SMS:
+Notification settings are required for e-mail and telegram. Also you have
+to enable receiving of SMS:
 
     / tool sms set receive-enabled=yes;
 

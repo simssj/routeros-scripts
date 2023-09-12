@@ -3,9 +3,6 @@ Notify on LTE firmware upgrade
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
@@ -16,10 +13,6 @@ upgrades. Currently supported LTE hardware:
 * R11e-LTE-US
 * R11e-4G
 * R11e-LTE6
-
-### Sample notification
-
-![check-lte-firmware-upgrade notification](check-lte-firmware-upgrade.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -35,7 +28,7 @@ Just install the script:
 Configuration
 -------------
 
-Notification setting are required for e-mail, matrix and/or telegram.
+Notification setting are required for e-mail and telegram.
 
 See also
 --------

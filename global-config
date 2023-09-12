@@ -8,7 +8,7 @@
 
 # Make sure all configuration properties are up to date and this
 # value is in sync with value in script 'global-functions'!
-:global GlobalConfigVersion 64;
+:global GlobalConfigVersion 44;
 
 # This is used for DNS and backup file.
 :global Domain "example.com";
@@ -25,32 +25,13 @@
 #:global EmailGeneralCc "another@example.com,third@example.com";
 
 # You can send Telegram notifications. Register a bot
-# and add the token and chat ids here, then install the module:
-# $ScriptInstallUpdate global-functions.d/notification-telegram
+# and add the token and chat ids here.
 :global TelegramTokenId "";
 :global TelegramChatId "";
 #:global TelegramTokenId "123456:ABCDEF-GHI";
 #:global TelegramChatId "12345678";
 # This is whether or not to send Telegram messages with fixed-width font.
 :global TelegramFixedWidthFont true;
-
-# You can send Matrix notifications. Configure these settings and
-# install the module:
-# $ScriptInstallUpdate global-functions.d/notification-matrix
-:global MatrixHomeServer "";
-:global MatrixAccessToken "";
-:global MatrixRoom "";
-#:global MatrixHomeServer "matrix.org";
-#:global MatrixAccessToken "123456ABCDEFGHI...";
-#:global MatrixRoom "!example:matrix.org";
-
-# It is possible to override e-mail, Telegram and Matrix setting for every
-# script. This is done in arrays, where 'Override' is appended to the
-# variable name, like this:
-#:global EmailGeneralToOverride {
-#  "check-certificates"="override@example.com";
-#  "email-backup"="backup@example.com";
-#}
 
 # Toggle this to disable symbols in notifications.
 :global NotificationsWithSymbols true;
@@ -61,7 +42,9 @@
 :global BackupSendBinary false;
 :global BackupSendExport true;
 :global BackupPassword "v3ry-s3cr3t";
-:global BackupRandomDelay 0;
+# These addresses are used to send backup and config export files to.
+:global EmailBackupTo "";
+:global EmailBackupCc "";
 # These credentials are used to upload backup and config export files.
 # SFTP authentication is tricky, you may have to limit authentication
 # methods for your SSH server.
@@ -69,20 +52,11 @@
 :global BackupUploadUser "mikrotik";
 :global BackupUploadPass "v3ry-s3cr3t";
 
-# This defines what log messages to filter or include by topic or message
-# text. Regular expressions are supported. Do *NOT* set an empty string,
-# that will filter or include everything!
-# These are filters, so excluding messages from forwarding.
+# This defines a filter on log topics not to be forwarded.
 :global LogForwardFilter "(debug|info)";
-:global LogForwardFilterMessage [];
-#:global LogForwardFilterMessage "message text";
-#:global LogForwardFilterMessage "(message text|another text|...)";
-# ... and another setting with reverse logic. This includes messages even
-# if filtered above.
-:global LogForwardInclude [];
-:global LogForwardIncludeMessage [];
-#:global LogForwardInclude "account";
-#:global LogForwardIncludeMessage "message text";
+# ... and the same for log message text.
+:global LogForwardFilterMessage "(^\$|^Error sending e-mail <.* Log Forwarding>:)";
+#:global LogForwardFilterMessage "(^\$|message text|...)";
 
 # Specify an address to enable auto update to version assumed safe.
 # The configured channel (bugfix, current, release-candidate) is appended.
@@ -92,8 +66,6 @@
 :global SafeUpdatePatch false;
 # Allow to install updates automatically if seen in neighbor list.
 :global SafeUpdateNeighbor false;
-# Allow to install updates even if device is managed by CAPsMAN.
-:global SafeUpdateOnCap false;
 
 # These thresholds control when to send health notification
 # on temperature and voltage.
@@ -158,20 +130,9 @@
 # Enable this to fetch scripts from given url.
 :global ScriptUpdatesFetch true;
 :global ScriptUpdatesBaseUrl "https://git.eworm.de/cgit/routeros-scripts/plain/";
-# alternative urls - main: stable code - next: currently in development
-#:global ScriptUpdatesBaseUrl "https://raw.githubusercontent.com/eworm-de/routeros-scripts/main/";
-#:global ScriptUpdatesBaseUrl "https://raw.githubusercontent.com/eworm-de/routeros-scripts/next/";
-#:global ScriptUpdatesBaseUrl "https://gitlab.com/eworm-de/routeros-scripts/raw/main/";
-#:global ScriptUpdatesBaseUrl "https://gitlab.com/eworm-de/routeros-scripts/raw/next/";
+#:global ScriptUpdatesBaseUrl "https://raw.githubusercontent.com/eworm-de/routeros-scripts/master/";
+#:global ScriptUpdatesBaseUrl "https://gitlab.com/eworm-de/routeros-scripts/raw/master/";
 :global ScriptUpdatesUrlSuffix "";
-# use next branch with default url (git.eworm.de)
-#:global ScriptUpdatesUrlSuffix "\?h=next";
-
-# Use this for defaults with $ScriptRunOnce
-# Install module with:
-# $ScriptInstallUpdate global-functions.d/scriptrunonce
-:global ScriptRunOnceBaseUrl "";
-:global ScriptRunOnceUrlSuffix "";
 
 # This project is developed in private spare time and usage is free of charge
 # for you. If you like the scripts and think this is of value for you or your

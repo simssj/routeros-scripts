@@ -1,4 +1,5 @@
-# Overlay for global configuration by RouterOS Scripts
+#!rsc by RouterOS
+# RouterOS script: global-config-overlay
 # Copyright (c) 2013-2021 Christian Hesse <mail@eworm.de>
 # https://git.eworm.de/cgit/routeros-scripts/about/COPYING.md
 #
@@ -7,8 +8,8 @@
 
 # Make sure all configuration properties are up to date and this
 # value is in sync with value in script 'global-functions'!
-# Comment or remove to disable news and change notifications.
-:global GlobalConfigVersion 64;
+# Comment or remove to disable change notifications.
+:global GlobalConfigVersion 44;
 
 # Copy configuration from global-config here and modify it.
 

@@ -3,9 +3,6 @@ Collect MAC addresses in wireless access list
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
@@ -14,10 +11,6 @@ address list. In addition a notification is sent.
 
 By default the access list entry is disabled, but you can easily enable
 and modify it to your needs.
-
-### Sample notification
-
-![collect-wireless-mac notification](collect-wireless-mac.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -40,7 +33,7 @@ On first run a disabled access list entry acting as marker (with comment
 "`--- collected above ---`") is added. Move this entry to define where new
 entries are to be added.
 
-Also notification settings are required for e-mail, matrix and/or telegram.
+Also notification settings are required for e-mail and telegram.
 
 Usage and invocation
 --------------------

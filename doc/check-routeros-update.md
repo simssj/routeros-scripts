@@ -3,9 +3,6 @@ Notify on RouterOS update
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
@@ -18,10 +15,6 @@ specifying versions safe to be updated on a web server.
 
 Also installing patch updates (where just last digit is increased)
 automatically is supported.
-
-### Sample notification
-
-![check-routeros-update notification](check-routeros-update.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -42,7 +35,6 @@ safe versions from a web server. The configuration goes to
 `global-config-overlay`, this is the parameter:
 
 * `SafeUpdateNeighbor`: install updates automatically if seen in neighbor list
-* `SafeUpdateOnCap`: check for updates even if device is managed by CAPsMAN
 * `SafeUpdatePatch`: install patch updates automatically
 * `SafeUpdateUrl`: url to check for safe update, the channel (`long-term`,
 `stable` or `testing`) is appended

@@ -1,0 +1,11 @@
+#!rsc by RouterOS
+# RouterOS script: global-wait
+
+:global GlobalFunctionsReady;
+:while ($GlobalFunctionsReady != true) do={
+  :delay 500ms;
+}
+
+:global LogPrintExit;
+
+$LogPrintExit warning ("This script 'global-wait' is now useless, please remove it from configuration.") true;

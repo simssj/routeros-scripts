@@ -3,18 +3,11 @@ Upload backup to server
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
 This script uploads binary backup (`/ system backup save`) and complete
 configuration export (`/ export terse`) to external server.
-
-### Sample notification
-
-![upload-backup notification](upload-backup.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -31,12 +24,11 @@ The configuration goes to `global-config-overlay`, these are the parameters:
 * `BackupSendBinary`: whether to send binary backup
 * `BackupSendExport`: whether to send configuration export
 * `BackupPassword`: password to encrypt the backup with
-* `BackupRandomDelay`: delay up to amount of seconds when run from scheduler
 * `BackupUploadUrl`: url to upload to
 * `BackupUploadUser`: username for server authentication
 * `BackupUploadPass`: password for server authentication
 
-Also notification settings are required for e-mail, matrix and/or telegram.
+Also notification settings are required for e-mail and telegram.
 
 ### Issues with SFTP client
 

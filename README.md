@@ -1,11 +1,9 @@
 RouterOS Scripts
 ================
 
-[![GitHub stars](https://img.shields.io/github/stars/eworm-de/routeros-scripts?style=social)](https://github.com/eworm-de/routeros-scripts/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/eworm-de/routeros-scripts?style=social)](https://github.com/eworm-de/routeros-scripts/network)
+[![GitHub stars](https://img.shields.io/github/stars/eworm-de/routeros-scripts?style=social)](https://github.com/eworm-de/routeros-scripts/stargazers)
 [![GitHub watchers](https://img.shields.io/github/watchers/eworm-de/routeros-scripts?style=social)](https://github.com/eworm-de/routeros-scripts/watchers)
-
-![RouterOS Scripts Logo](logo.svg)
 
 [RouterOS](https://mikrotik.com/software) is the operating system developed
 by [MikroTik](https://mikrotik.com/aboutus) for networking tasks. This
@@ -50,9 +48,11 @@ download the certificates. If you intend to download the scripts from a
 different location (for example from github.com) install the corresponding
 certificate chain.
 
-    / tool fetch "https://git.eworm.de/cgit/routeros-scripts/plain/certs/R3.pem" dst-path="letsencrypt-R3.pem";
-
-![screenshot: download certs](README.d/01-download-certs.png)
+    [admin@MikroTik] > / tool fetch "https://git.eworm.de/cgit/routeros-scripts/plain/certs/R3.pem" dst-path="letsencrypt-R3.pem"
+          status: finished
+      downloaded: 4KiBC-z pause]
+           total: 4KiB
+        duration: 1s
 
 Note that the commands above do *not* verify server certificate, so if you
 want to be safe download with your workstations's browser and transfer the
@@ -63,63 +63,61 @@ files to your MikroTik device.
 
 Then we import the certificates.
 
-    / certificate import file-name=letsencrypt-R3.pem passphrase="";
-
-![screenshot: import certs](README.d/02-import-certs.png)
+    [admin@MikroTik] > / certificate import file-name=letsencrypt-R3.pem passphrase=""
+         certificates-imported: 3
+         private-keys-imported: 0
+                files-imported: 1
+           decryption-failures: 0
+      keys-with-no-certificate: 0
 
 For basic verification we rename the certificates and print their count. Make
-sure the certificate count is **two**.
+sure the certificate count is **three**.
 
-    / certificate set name="R3" [ find where fingerprint="67add1166b020ae61b8f5fc96813c04c2aa589960796865572a3c7e737613dfd" ];
-    / certificate set name="ISRG-Root-X1" [ find where fingerprint="96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6" ];
-    / certificate print count-only where fingerprint="67add1166b020ae61b8f5fc96813c04c2aa589960796865572a3c7e737613dfd" or fingerprint="96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6";
-
-![screenshot: check certs](README.d/03-check-certs.png)
+    [admin@MikroTik] > / certificate set name="R3" [ find where fingerprint="67add1166b020ae61b8f5fc96813c04c2aa589960796865572a3c7e737613dfd" ]
+    [admin@MikroTik] > / certificate set name="ISRG-Root-X1" [ find where fingerprint="96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6" ]
+    [admin@MikroTik] > / certificate set name="DST-Root-CA-X3" [ find where fingerprint="0687260331a72403d909f105e69bcf0d32e1bd2493ffc6d9206d11bcd6770739" ]
+    [admin@MikroTik] > / certificate print count-only where fingerprint="67add1166b020ae61b8f5fc96813c04c2aa589960796865572a3c7e737613dfd" or fingerprint="96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6" or fingerprint="0687260331a72403d909f105e69bcf0d32e1bd2493ffc6d9206d11bcd6770739"
+    3
 
 Always make sure there are no certificates installed you do not know or want!
 
-All following commands will verify the server certificate. For validity the
-certificate's lifetime is checked with local time, so make sure the device's
-date and time is set correctly!
+Actually we do not require the certificate named `DST Root CA X3`, but as it
+is used by `Let's Encrypt` to cross-sign we install it anyway - this makes
+sure things do not go wrong if the intermediate certificate is replaced.
+The IdenTrust certificate *should* be available from their
+[download page](https://www.identrust.com/support/downloads). The site is
+crap and a good example how to *not* do it.
 
 Now let's download the main scripts and add them in configuration on the fly.
 
-    :foreach Script in={ "global-config"; "global-config-overlay"; "global-functions" } do={ / system script add name=$Script source=([ / tool fetch check-certificate=yes-without-crl ("https://git.eworm.de/cgit/routeros-scripts/plain/" . $Script) output=user as-value]->"data"); };
+    [admin@MikroTik] > :foreach Script in={ "global-config"; "global-config-overlay"; "global-functions" } do={ / system script add name=$Script source=([ / tool fetch check-certificate=yes-without-crl ("https://git.eworm.de/cgit/routeros-scripts/plain/" . $Script) output=user as-value]->"data"); }
 
-![screenshot: import scripts](README.d/04-import-scripts.png)
+Mark `global-config-overlay` not to be overwritten by future updates.
+
+    [admin@MikroTik] > / system script set comment="ignore" global-config-overlay
 
 The configuration needs to be tweaked for your needs. Edit
 `global-config-overlay`, copy configuration from
 [`global-config`](global-config) (the one without `-overlay`).
-Save changes and exit with `Ctrl-o`.
 
-    / system script edit global-config-overlay source;
-
-![screenshot: edit global-config-overlay](README.d/05-edit-global-config-overlay.png)
+    [admin@MikroTik] > / system script edit global-config-overlay source
 
 And finally load configuration and functions and add the scheduler.
 
-    / system script { run global-config; run global-config-overlay; run global-functions; };
-    / system scheduler add name="global-scripts" start-time=startup on-event="/ system script { run global-config; run global-config-overlay; run global-functions; }";
-
-![screenshot: run and schedule scripts](README.d/06-run-and-schedule-scripts.png)
+    [admin@MikroTik] > / system script { run global-config; run global-config-overlay; run global-functions; }
+    [admin@MikroTik] > / system scheduler add name="global-scripts" start-time=startup on-event="/ system script { run global-config; run global-config-overlay; run global-functions; }"
 
 The last step is optional: Add this scheduler **only** if you want the scripts
 to be updated automatically!
 
-    / system scheduler add name="ScriptInstallUpdate" start-time=startup interval=1d on-event=":global ScriptInstallUpdate; \$ScriptInstallUpdate;";
-
-![screenshot: schedule update](README.d/07-schedule-update.png)
+    [admin@MikroTik] > / system scheduler add name="ScriptInstallUpdate" start-time=startup interval=1d on-event=":global ScriptInstallUpdate; \$ScriptInstallUpdate;"
 
 Updating scripts
 ----------------
 
-To update existing scripts just run function `$ScriptInstallUpdate`. If
-everything is up-to-date it will not produce any output.
+To update existing scripts just run function `$ScriptInstallUpdate`.
 
-    $ScriptInstallUpdate;
-
-![screenshot: update scripts](README.d/08-update-scripts.png)
+    [admin@MikroTik] > $ScriptInstallUpdate
 
 Adding a script
 ---------------
@@ -127,9 +125,7 @@ Adding a script
 To add a script from the repository run function `$ScriptInstallUpdate` with
 a comma separated list of script names.
 
-    $ScriptInstallUpdate check-certificates,check-routeros-update;
-
-![screenshot: install scripts](README.d/09-install-scripts.png)
+    [admin@MikroTik] > $ScriptInstallUpdate check-certificates,check-routeros-update
 
 Scheduler and events
 --------------------
@@ -139,19 +135,15 @@ Most scripts are designed to run regularly from
 added `check-routeros-update`, so let's run it every hour to make sure not to
 miss an update.
 
-    / system scheduler add name="check-routeros-update" interval=1h on-event="/ system script run check-routeros-update;";
-
-![screenshot: schedule script](README.d/10-schedule-script.png)
+    [admin@MikroTik] > / system scheduler add name="check-routeros-update" interval=1h on-event="/ system script run check-routeros-update;"
 
 Some events can run a script. If you want your DHCP hostnames to be available
 in DNS use `dhcp-to-dns` with the events from dhcp server. For a regular
 cleanup add a scheduler entry.
 
-    $ScriptInstallUpdate dhcp-to-dns,lease-script;
-    / ip dhcp-server set lease-script=lease-script [ find ];
-    / system scheduler add name="dhcp-to-dns" interval=5m on-event="/ system script run dhcp-to-dns;";
-
-![screenshot: setup lease script](README.d/11-setup-lease-script.png)
+    [admin@MikroTik] > $ScriptInstallUpdate dhcp-to-dns,lease-script
+    [admin@MikroTik] > / ip dhcp-server set lease-script=lease-script [ find ]
+    [admin@MikroTik] > / system scheduler add name="dhcp-to-dns" interval=5m on-event="/ system script run dhcp-to-dns;"
 
 There's much more to explore... Have fun!
 
@@ -175,7 +167,6 @@ Available Scripts
 * [Send backup via e-mail](doc/email-backup.md)
 * [Send GPS position to server](doc/gps-track.md)
 * [Use WPA2 network with hotspot credentials](doc/hotspot-to-wpa.md)
-* [Create DNS records for IPSec peers](doc/ipsec-to-dns.md)
 * [Update configuration on IPv6 prefix change](doc/ipv6-update.md)
 * [Manage IP addresses with bridge status](doc/ip-addr-bridge.md)
 * [Run other scripts on DHCP lease](doc/lease-script.md)
@@ -200,13 +191,6 @@ Available Scripts
 [comment]: # (TODO: currently undocumented)
 [comment]: # (* learn-mac-based-vlan)
 [comment]: # (* manage-umts)
-
-Contact
--------
-
-We have a Telegram Group [RouterOS-Scripts](https://t.me/routeros_scripts)!
-Get help, give feedback or just chat - but do not expect free professional
-support!
 
 Contribute
 ----------

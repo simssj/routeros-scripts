@@ -3,9 +3,6 @@ Notify about health state
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
@@ -23,22 +20,6 @@ hardware supports:
 
     / system health print;
 
-### Sample notifications
-
-#### Voltage
-
-![check-health notification voltage](check-health.d/notification-01-voltage.svg)
-
-#### Temperature
-
-![check-health notification](check-health.d/notification-02-temperature-high.svg)  
-![check-health notification](check-health.d/notification-03-temperature-ok.svg)
-
-#### PSU state
-
-![check-health notification](check-health.d/notification-04-psu-fail.svg)  
-![check-health notification](check-health.d/notification-05-psu-ok.svg)
-
 Requirements and installation
 -----------------------------
 
@@ -50,12 +31,12 @@ Just install the script and create a scheduler:
 Configuration
 -------------
 
-The configuration goes to `global-config-overlay`, these are the parameters:
+The configuration goes to `global-config-overlay`, These are the parameters:
 
 * `CheckHealthTemperature`: an array specifying temperature thresholds for sensors
 * `CheckHealthVoltagePercent`: percentage value to trigger voltage jumps
 
-Also notification settings are required for e-mail, matrix and/or telegram.
+Also notification settings are required for e-mail and telegram.
 
 ---
 [◀ Go back to main README](../README.md)  

@@ -6,13 +6,12 @@
 # renew locally issued certificates
 # https://git.eworm.de/cgit/routeros-scripts/about/doc/certificate-renew-issued.md
 
-:local 0 "certificate-renew-issued";
 :global GlobalFunctionsReady;
 :while ($GlobalFunctionsReady != true) do={ :delay 500ms; }
 
 :global CertIssuedExportPass;
 
-:global LogPrintExit2;
+:global LogPrintExit;
 :global MkDir;
 
 :foreach Cert in=[ / certificate find where issued expires-after<3w ] do={
@@ -27,12 +26,12 @@
       / certificate export-certificate ($CertVal->"name") type=pkcs12 \
           file-name=("cert-issued/" . $CertVal->"common-name") \
           export-passphrase=($CertIssuedExportPass->($CertVal->"common-name"));
-      $LogPrintExit2 info $0 ("Issued a new certificate for \"" . $CertVal->"common-name" . \
+      $LogPrintExit info ("Issued a new certificate for \"" . $CertVal->"common-name" . \
         "\", exported to \"cert-issued/" . $CertVal->"common-name" . ".p12\".") false;
     } else={
-      $LogPrintExit2 warning $0 ("Failed creating directory, not exporting certificate.") false;
+      $LogPrintExit warning ("Failed creating directory, not exporting certificate.") false;
     }
   } else={
-    $LogPrintExit2 info $0 ("Issued a new certificate for \"" . $CertVal->"common-name" . "\".") false;
+    $LogPrintExit info ("Issued a new certificate for \"" . $CertVal->"common-name" . "\".") false;
   }
 }

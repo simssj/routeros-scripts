@@ -6,7 +6,6 @@
 # check for RouterOS health state
 # https://git.eworm.de/cgit/routeros-scripts/about/doc/check-health.md
 
-:local 0 "check-health";
 :global GlobalFunctionsReady;
 :while ($GlobalFunctionsReady != true) do={ :delay 500ms; }
 
@@ -17,9 +16,8 @@
 :global CheckHealthVoltagePercent;
 :global Identity;
 
-:global LogPrintExit2;
-:global ScriptLock;
-:global SendNotification2;
+:global LogPrintExit;
+:global SendNotification;
 :global SymbolForNotification;
 
 :local FormatVoltage do={
@@ -30,14 +28,12 @@
 :local CheckHealthCurrent [ / system health get ];
 
 :if ([ :len $CheckHealthCurrent ] = 0) do={
-  $LogPrintExit2 error $0 ("Your device does not provide any health values.") true;
+  $LogPrintExit error ("Your device does not provide any health values.") true;
 }
 
 :if ([ :typeof $CheckHealthTemperatureNotified ] != "array") do={
   :set CheckHealthTemperatureNotified [ :toarray "" ];
 }
-
-$ScriptLock $0;
 
 :foreach Name,Voltage in=$CheckHealthCurrent do={
   :if ($Name ~ "(battery|voltage)" && \
@@ -45,11 +41,10 @@ $ScriptLock $0;
        [ :typeof $Voltage ] = "num") do={
     :if ($CheckHealthLast->$Name * (100 + $CheckHealthVoltagePercent) < $Voltage * 100 || \
          $CheckHealthLast->$Name * 100 > $Voltage * (100 + $CheckHealthVoltagePercent)) do={
-      $SendNotification2 ({ origin=$0; \
-        subject=([ $SymbolForNotification "high-voltage-sign" ] . "Health warning: " . $Name); \
-        message=("The " . $Name . " on " . $Identity . " jumped more than " . $CheckHealthVoltagePercent . "%.\n\n" . \
+      $SendNotification ([ $SymbolForNotification "high-voltage-sign" ] . "Health warning: " . $Name) \
+          ("The " . $Name . " on " . $Identity . " jumped more than " . $CheckHealthVoltagePercent . "%.\n\n" . \
           "old value: " . [ $FormatVoltage ($CheckHealthLast->$Name) ] . "\n" . \
-          "new value: " . [ $FormatVoltage $Voltage ]) });
+          "new value: " . [ $FormatVoltage $Voltage ]);
     }
   }
 }
@@ -60,15 +55,13 @@ $ScriptLock $0;
        [ :typeof $PSU ] = "str") do={
     :if ($CheckHealthLast->$Name = "ok" && \
          $PSU != "ok") do={
-      $SendNotification2 ({ origin=$0; \
-        subject=([ $SymbolForNotification "cross-mark" ] . "Health warning: " . $Name); \
-        message=("The power supply unit '" . $Name . "' on " . $Identity . " failed!") });
+      $SendNotification ([ $SymbolForNotification "cross-mark" ] . "Health warning: " . $Name) \
+          ("The power supply unit '" . $Name . "' on " . $Identity . " failed!");
     }
     :if ($CheckHealthLast->$Name != "ok" && \
          $PSU = "ok") do={
-      $SendNotification2 ({ origin=$0; \
-        subject=([ $SymbolForNotification "white-heavy-check-mark" ] . "Health recovery: " . $Name); \
-        message=("The power supply unit '" . $Name . "' on " . $Identity . " recovered!") });
+      $SendNotification ([ $SymbolForNotification "white-heavy-check-mark" ] . "Health recovery: " . $Name) \
+          ("The power supply unit '" . $Name . "' on " . $Identity . " recovered!");
     }
   }
 }
@@ -77,7 +70,7 @@ $ScriptLock $0;
   :if ($Name ~ "temperature" && \
        [ :typeof $Temperature ] = "num") do={
     :if ([ :typeof ($CheckHealthTemperature->$Name) ] != "num" ) do={
-      $LogPrintExit2 info $0 ("No threshold given for " . $Name . ", assuming 50C.") false;
+      $LogPrintExit info ("No threshold given for " . $Name . ", assuming 50C.") false;
       :set ($CheckHealthTemperature->$Name) 50;
     }
     :local Validate [ / system health get $Name ];
@@ -87,18 +80,16 @@ $ScriptLock $0;
     }
     :if ($Temperature > $CheckHealthTemperature->$Name && \
          $CheckHealthTemperatureNotified->$Name != true) do={
-      $SendNotification2 ({ origin=$0; \
-        subject=([ $SymbolForNotification "fire" ] . "Health warning: " . $Name); \
-        message=("The " . $Name . " on " . $Identity . " is above threshold: " . \
-          $Temperature . "\C2\B0" . "C") });
+      $SendNotification ([ $SymbolForNotification "fire" ] . "Health warning: " . $Name) \
+          ("The " . $Name . " on " . $Identity . " is above threshold: " . \
+          $Temperature . "\C2\B0" . "C");
       :set ($CheckHealthTemperatureNotified->$Name) true;
     }
     :if ($Temperature <= ($CheckHealthTemperature->$Name - $CheckHealthTemperatureDeviation) && \
          $CheckHealthTemperatureNotified->$Name = true) do={
-      $SendNotification2 ({ origin=$0; \
-        subject=([ $SymbolForNotification "white-heavy-check-mark" ] . "Health recovery: " . $Name); \
-        message=("The " . $Name . " on " . $Identity . " dropped below threshold: " .  \
-          $Temperature . "\C2\B0" . "C") });
+      $SendNotification ([ $SymbolForNotification "white-heavy-check-mark" ] . "Health recovery: " . $Name) \
+          ("The " . $Name . " on " . $Identity . " dropped below threshold: " .  \
+          $Temperature . "\C2\B0" . "C");
       :set ($CheckHealthTemperatureNotified->$Name) false;
     }
   }

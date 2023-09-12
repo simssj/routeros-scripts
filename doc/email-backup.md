@@ -3,9 +3,6 @@ Send backup via e-mail
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
@@ -23,14 +20,15 @@ Just install the script:
 Configuration
 -------------
 
-The configuration goes to `global-config-overlay`, these are the parameters:
+The configuration goes to `global-config-overlay`, These are the parameters:
 
 * `BackupSendBinary`: whether to send binary backup
 * `BackupSendExport`: whether to send configuration export
 * `BackupPassword`: password to encrypt the backup with
-* `BackupRandomDelay`: delay up to amount of seconds when run from scheduler
+* `EmailBackupTo`: e-mail address to send to
+* `EmailBackupCc`: e-mail address(es) to send in copy
 
-Also valid e-mail settings are required to send mails.
+Also valid e-mail settings in `/ tool e-mail` are required to send mails.
 
 Usage and invocation
 --------------------

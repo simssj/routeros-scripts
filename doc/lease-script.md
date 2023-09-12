@@ -3,19 +3,15 @@ Run other scripts on DHCP lease
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
 This script is supposed to run from dhcp server as lease script. Currently
 it does:
 
+* run [dhcp-to-dns](dhcp-to-dns.md)
 * run [collect-wireless-mac](collect-wireless-mac.md)
 * run [dhcp-lease-comment](dhcp-lease-comment.md)
-* run [dhcp-to-dns](dhcp-to-dns.md)
-* run [hotspot-to-wpa](hotspot-to-wpa.md)
 
 Requirements and installation
 -----------------------------
@@ -34,7 +30,6 @@ See also
 * [Collect MAC addresses in wireless access list](collect-wireless-mac.md)
 * [Comment DHCP leases with info from access list](dhcp-lease-comment.md)
 * [Create DNS records for DHCP leases](dhcp-to-dns.md)
-* [Use WPA2 network with hotspot credentials](hotspot-to-wpa.md)
 
 ---
 [◀ Go back to main README](../README.md)  

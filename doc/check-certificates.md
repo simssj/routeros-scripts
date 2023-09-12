@@ -3,18 +3,11 @@ Renew certificates and notify on expiration
 
 [◀ Go back to main README](../README.md)
 
-🛈 This script can not be used on its own but requires the base installation.
-See [main README](../README.md) for details.
-
 Description
 -----------
 
 This script tries to download and renew certificates, then notifies about
 certificates that are still about to expire.
-
-### Sample notification
-
-![check-certificates notification](check-certificates.d/notification.svg)
 
 Requirements and installation
 -----------------------------
@@ -26,8 +19,8 @@ Just install the script:
 Configuration
 -------------
 
-The expiry notifications just require notification settings for e-mail,
-matrix and/or telegram.
+The expiry notifications just require notification settings for e-mail and
+telegram.
 
 For automatic download and renewal of certificates you need configuration
 in `global-config-overlay`, these are the parameters:
